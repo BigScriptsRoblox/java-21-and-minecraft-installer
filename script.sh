@@ -1,5 +1,6 @@
 #!/bin/bash
 # TO REUSE THIS CODE IN A VIDEO, YOU MUST DM foxytoux ON DISCORD OR SEND AN EMAIL TO foxytoux@gmail.com
+
 # Confirmation prompt
 read -p "Do you want to download and set up the Minecraft server? (type 'YES' to proceed): " confirm_download
 
@@ -8,17 +9,14 @@ if [ "$confirm_download" != "YES" ]; then
     exit 0
 fi
 
-# Download and extract Java 17
-wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz
-tar -xzvf jdk-21_linux-x64_bin.tar.gz
+# Install OpenJDK 21
+echo "Installing OpenJDK 21..."
+sudo apt update
+sudo apt install -y openjdk-21-jdk
 
 # Set environment variables
-export JAVA_HOME=$(pwd)/jdk-17
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 export PATH=$JAVA_HOME/bin:$PATH
-
-# Update the system alternatives
-sudo update-alternatives --install /usr/bin/java java $JAVA_HOME/bin/java 1
-sudo update-alternatives --install /usr/bin/javac javac $JAVA_HOME/bin/javac 1
 
 # Display Java version
 java -version
@@ -46,19 +44,8 @@ echo "eula=true" > eula.txt
 # Modify server.properties to set online-mode to false
 echo "online-mode=false" >> server.properties
 
-# Launch your server here (replace the following line with your server startup command)
-# For example, if your server is a JAR file, you might use: java -jar server.jar
+# Launch your server here
 echo "Launching server..."
-
-# Replace the following line with your actual server startup command
-# For example, you can start a simple Minecraft server:
-# java -Xmx2G -Xms1G -jar server.jar nogui
-# Add your server startup command below this line
-
-# Example: Start a simple Minecraft server for demonstration purposes
 java -Xmx2G -Xms1G -jar server.jar nogui
 
 # End of server startup command
-
-# Clean up downloaded files (optional)
-rm jdk-21_linux-x64_bin.tar.gz
