@@ -1,6 +1,5 @@
 #!/bin/bash
 # TO REUSE THIS CODE IN A VIDEO, YOU MUST DM foxytoux ON DISCORD OR SEND AN EMAIL TO foxytoux@gmail.com
-
 # Confirmation prompt
 read -p "Do you want to download and set up the Minecraft server? (type 'YES' to proceed): " confirm_download
 
@@ -9,20 +8,23 @@ if [ "$confirm_download" != "YES" ]; then
     exit 0
 fi
 
-# Install OpenJDK 21
-echo "Installing OpenJDK 21..."
-sudo apt update
-sudo apt install -y openjdk-21-jdk
+# Download and extract Java 17
+wget https://download.java.net/java/GA/jdk21.0.1/415e3f918a1f4062a0074a2794853d0d/12/GPL/openjdk-21.0.1_linux-x64_bin.tar.gz
+tar -xzvf openjdk-21.0.1_linux-x64_bin.tar.gz
 
 # Set environment variables
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+export JAVA_HOME=$(pwd)/jdk-17
 export PATH=$JAVA_HOME/bin:$PATH
+
+# Update the system alternatives
+sudo update-alternatives --install /usr/bin/java java $JAVA_HOME/bin/java 1
+sudo update-alternatives --install /usr/bin/javac javac $JAVA_HOME/bin/javac 1
 
 # Display Java version
 java -version
 
 # Ask the user for the server.jar link
-read -p "Enter the link to the server.jar (type 'none' or leave blank for default 1.21.4): " server_jar_link
+read -p "Enter the link to the server.jar (type 'none' or leave blank for default 1.20.2): " server_jar_link
 
 # Download server JAR
 if [ -z "$server_jar_link" ] || [ "$server_jar_link" == "none" ]; then
@@ -44,8 +46,19 @@ echo "eula=true" > eula.txt
 # Modify server.properties to set online-mode to false
 echo "online-mode=false" >> server.properties
 
-# Launch your server here
+# Launch your server here (replace the following line with your server startup command)
+# For example, if your server is a JAR file, you might use: java -jar server.jar
 echo "Launching server..."
+
+# Replace the following line with your actual server startup command
+# For example, you can start a simple Minecraft server:
+# java -Xmx2G -Xms1G -jar server.jar nogui
+# Add your server startup command below this line
+
+# Example: Start a simple Minecraft server for demonstration purposes
 java -Xmx2G -Xms1G -jar server.jar nogui
 
 # End of server startup command
+
+# Clean up downloaded files (optional)
+rm openjdk-21.0.1_linux-x64_bin.tar.gz
